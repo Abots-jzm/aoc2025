@@ -9,7 +9,6 @@ pub fn solve() {
 
 fn part1(input: &str) -> isize {
     let mut position = 50;
-    // let mut counter = 0;
     input
         .lines()
         .map(|line| line.parse::<Turn>().unwrap())
@@ -22,14 +21,38 @@ fn part1(input: &str) -> isize {
         })
 }
 
-fn part2(input: &str) -> i64 {
-    // TODO: Implement part 2
-    0
+fn part2(input: &str) -> isize {
+    let mut position = 50;
+    input
+        .lines()
+        .map(|line| line.parse::<Turn>().unwrap())
+        .fold(0, |acc, turn| {
+            let mut zero_count = 0;
+            position = match turn {
+                Turn::Left(n) => {
+                    zero_count += n / 100;
+                    let n = n % 100;
+                    if position != 0 && n >= position {
+                        zero_count += 1;
+                    }
+                    (position - n).rem_euclid(100)
+                }
+                Turn::Right(n) => {
+                    zero_count += n / 100;
+                    let n = n % 100;
+                    if position != 0 && position + n >= 100 {
+                        zero_count += 1;
+                    }
+                    (position + n).rem_euclid(100)
+                }
+            };
+            acc + zero_count
+        })
 }
 
 enum Turn {
-    Left(i32),
-    Right(i32),
+    Left(isize),
+    Right(isize),
 }
 
 impl std::str::FromStr for Turn {
@@ -37,7 +60,7 @@ impl std::str::FromStr for Turn {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (dir, num) = s.split_at(1);
-        let value: i32 = num.parse().expect("should be a valid number");
+        let value: isize = num.parse().expect("should be a valid number");
         match dir {
             "L" => Ok(Turn::Left(value)),
             "R" => Ok(Turn::Right(value)),
@@ -67,8 +90,8 @@ L82
         assert_eq!(part1(INPUT), 3);
     }
 
-    // #[test]
-    // fn test_part2() {
-    //     assert_eq!(part2(EXAMPLE), 0);
-    // }
+    #[test]
+    fn test_part2() {
+        assert_eq!(part2(INPUT), 6);
+    }
 }
