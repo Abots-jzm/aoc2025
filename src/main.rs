@@ -1,5 +1,6 @@
 mod day01;
 mod day02;
+mod day03;
 
 fn main() {
     println!("🎄 Advent of Code 2025 🎄\n");
@@ -8,6 +9,8 @@ fn main() {
     day01::solve();
     println!("\nDay 2:");
     day02::solve();
+    println!("\nDay 3:");
+    day03::solve();
 }
 
 // Helper function to read input file for a given day
